@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 165 25% 95%;
+    --foreground: 210 20% 20%;
+
+    --card: 165 20% 97%;
+    --card-foreground: 210 20% 20%;
+
+    --popover: 165 20% 97%;
+    --popover-foreground: 210 20% 20%;
+
+    --primary: 172 50% 40%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 200 30% 92%;
+    --secondary-foreground: 210 20% 25%;
+
+    --muted: 170 15% 92%;
+    --muted-foreground: 210 10% 50%;
+
+    --accent: 200 60% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 55% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 170 15% 88%;
+    --input: 170 15% 88%;
+    --ring: 172 50% 40%;
+
+    --radius: 1rem;
+
+    --sidebar-background: 165 22% 93%;
+    --sidebar-foreground: 210 15% 30%;
+    --sidebar-primary: 172 50% 40%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 170 20% 89%;
+    --sidebar-accent-foreground: 210 20% 20%;
+    --sidebar-border: 170 15% 88%;
+    --sidebar-ring: 172 50% 40%;
+
+    /* Neumorphic shadows */
+    --shadow-neu-raised: 6px 6px 14px hsl(170 15% 82%), -6px -6px 14px hsl(0 0% 100%);
+    --shadow-neu-inset: inset 3px 3px 8px hsl(170 15% 82%), inset -3px -3px 8px hsl(0 0% 100%);
+    --shadow-neu-button: 4px 4px 10px hsl(170 15% 82%), -4px -4px 10px hsl(0 0% 100%);
+    --shadow-neu-button-active: inset 2px 2px 6px hsl(170 15% 82%), inset -2px -2px 6px hsl(0 0% 100%);
+
+    /* Glassmorphism */
+    --glass-bg: hsl(165 25% 97% / 0.6);
+    --glass-border: hsl(170 15% 92% / 0.5);
+    --glass-blur: 12px;
+
+    /* Success / Warning */
+    --success: 155 50% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 40 70% 55%;
+    --warning-foreground: 0 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'DM Sans', sans-serif;
+  }
+}
+
+@layer utilities {
+  .neu-raised {
+    box-shadow: var(--shadow-neu-raised);
+  }
+  .neu-inset {
+    box-shadow: var(--shadow-neu-inset);
+  }
+  .neu-button {
+    box-shadow: var(--shadow-neu-button);
+  }
+  .neu-button-active {
+    box-shadow: var(--shadow-neu-button-active);
+  }
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+  }
+}
