@@ -1,7 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import pg from 'pg';
+import productsRoutes from './routes/products.js';  
+import dealersRoutes from './routes/dealers.js';
+import purchasesRoutes from './routes/purchases.js';
+import salesRoutes from './routes/sales.js';
+import dealerPaymentsRoutes from './routes/dealerPayments.js';
 
 dotenv.config();
 
@@ -10,6 +14,12 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+
+app.use('/api/products', productsRoutes); 
+app.use('/api/dealers', dealersRoutes);
+app.use('/api/purchases', purchasesRoutes);
+app.use('/api/sales', salesRoutes);
+app.use('/api/dealer-payments', dealerPaymentsRoutes);
 
 app.get('/', (req, res) => {
     res.send('app is running');

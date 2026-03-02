@@ -5,11 +5,12 @@ import { Plus } from "lucide-react";
 export default function Sales() {
   const { products, sales, addSale, getProductStock } = useStore();
   const [showForm, setShowForm] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm] = useState({ productId: "", quantity: "", unitPrice: "", customerName: "", date: new Date().toISOString().split("T")[0] });
 
   const selectedProduct = products.find(p => p.id === form.productId);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.productId || !form.quantity || !form.unitPrice) return;
     const stock = getProductStock(form.productId);
@@ -17,15 +18,20 @@ export default function Sales() {
       alert(`Insufficient stock! Available: ${stock}`);
       return;
     }
-    addSale({
-      productId: form.productId,
-      quantity: Number(form.quantity),
-      unitPrice: Number(form.unitPrice),
-      customerName: form.customerName,
-      date: form.date,
-    });
-    setForm({ productId: "", quantity: "", unitPrice: "", customerName: "", date: new Date().toISOString().split("T")[0] });
-    setShowForm(false);
+    try {
+      await addSale({
+        productId: form.productId,
+        quantity: Number(form.quantity),
+        unitPrice: Number(form.unitPrice),
+        customerName: form.customerName,
+        date: form.date,
+      });
+      setSubmitError(null);
+      setForm({ productId: "", quantity: "", unitPrice: "", customerName: "", date: new Date().toISOString().split("T")[0] });
+      setShowForm(false);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to save sale");
+    }
   };
 
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || "Unknown";
@@ -72,6 +78,7 @@ export default function Sales() {
             <button type="submit" className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm neu-button active:neu-button-active">Save Sale</button>
             <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2.5 rounded-xl bg-muted text-muted-foreground font-medium text-sm neu-button active:neu-button-active">Cancel</button>
           </div>
+          {submitError && <p className="text-sm text-red-500 mt-3">{submitError}</p>}
         </form>
       )}
 

@@ -5,20 +5,26 @@ import { Plus } from "lucide-react";
 export default function Purchases() {
   const { products, dealers, purchases, addPurchase } = useStore();
   const [showForm, setShowForm] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm] = useState({ productId: "", dealerId: "", quantity: "", unitPrice: "", date: new Date().toISOString().split("T")[0] });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.productId || !form.dealerId || !form.quantity || !form.unitPrice) return;
-    addPurchase({
-      productId: form.productId,
-      dealerId: form.dealerId,
-      quantity: Number(form.quantity),
-      unitPrice: Number(form.unitPrice),
-      date: form.date,
-    });
-    setForm({ productId: "", dealerId: "", quantity: "", unitPrice: "", date: new Date().toISOString().split("T")[0] });
-    setShowForm(false);
+    try {
+      await addPurchase({
+        productId: form.productId,
+        dealerId: form.dealerId,
+        quantity: Number(form.quantity),
+        unitPrice: Number(form.unitPrice),
+        date: form.date,
+      });
+      setSubmitError(null);
+      setForm({ productId: "", dealerId: "", quantity: "", unitPrice: "", date: new Date().toISOString().split("T")[0] });
+      setShowForm(false);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to save purchase");
+    }
   };
 
   const getProductName = (id: string) => products.find(p => p.id === id)?.name || "Unknown";
@@ -56,6 +62,7 @@ export default function Purchases() {
             <button type="submit" className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm neu-button active:neu-button-active">Save Purchase</button>
             <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2.5 rounded-xl bg-muted text-muted-foreground font-medium text-sm neu-button active:neu-button-active">Cancel</button>
           </div>
+          {submitError && <p className="text-sm text-red-500 mt-3">{submitError}</p>}
         </form>
       )}
 

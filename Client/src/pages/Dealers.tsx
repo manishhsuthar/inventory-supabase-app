@@ -6,23 +6,34 @@ export default function Dealers() {
   const { dealers, addDealer, getDealerBalance, purchases, dealerPayments, addDealerPayment } = useStore();
   const [showForm, setShowForm] = useState(false);
   const [showPayment, setShowPayment] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", phone: "", address: "" });
   const [payForm, setPayForm] = useState({ amount: "", note: "", date: new Date().toISOString().split("T")[0] });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name) return;
-    addDealer(form);
-    setForm({ name: "", phone: "", address: "" });
-    setShowForm(false);
+    try {
+      await addDealer(form);
+      setSubmitError(null);
+      setForm({ name: "", phone: "", address: "" });
+      setShowForm(false);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to add dealer");
+    }
   };
 
-  const handlePayment = (e: React.FormEvent) => {
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!showPayment || !payForm.amount) return;
-    addDealerPayment({ dealerId: showPayment, amount: Number(payForm.amount), note: payForm.note, date: payForm.date });
-    setPayForm({ amount: "", note: "", date: new Date().toISOString().split("T")[0] });
-    setShowPayment(null);
+    try {
+      await addDealerPayment({ dealerId: showPayment, amount: Number(payForm.amount), note: payForm.note, date: payForm.date });
+      setSubmitError(null);
+      setPayForm({ amount: "", note: "", date: new Date().toISOString().split("T")[0] });
+      setShowPayment(null);
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to record payment");
+    }
   };
 
   return (
@@ -49,6 +60,7 @@ export default function Dealers() {
             <button type="submit" className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm neu-button active:neu-button-active">Save</button>
             <button type="button" onClick={() => setShowForm(false)} className="px-6 py-2.5 rounded-xl bg-muted text-muted-foreground font-medium text-sm neu-button active:neu-button-active">Cancel</button>
           </div>
+          {submitError && <p className="text-sm text-red-500 mt-3">{submitError}</p>}
         </form>
       )}
 
@@ -64,6 +76,7 @@ export default function Dealers() {
             <button type="submit" className="px-6 py-2.5 rounded-xl bg-primary text-primary-foreground font-medium text-sm neu-button active:neu-button-active">Record Payment</button>
             <button type="button" onClick={() => setShowPayment(null)} className="px-6 py-2.5 rounded-xl bg-muted text-muted-foreground font-medium text-sm neu-button active:neu-button-active">Cancel</button>
           </div>
+          {submitError && <p className="text-sm text-red-500 mt-3">{submitError}</p>}
         </form>
       )}
 
