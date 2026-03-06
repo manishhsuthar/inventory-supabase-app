@@ -6,6 +6,7 @@ import dealersRoutes from './routes/dealers.js';
 import purchasesRoutes from './routes/purchases.js';
 import salesRoutes from './routes/sales.js';
 import dealerPaymentsRoutes from './routes/dealerPayments.js';
+import { notFoundHandler, errorHandler } from './middleware/errorHandler.js';
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ app.use('/api/dealer-payments', dealerPaymentsRoutes);
 app.get('/', (req, res) => {
     res.send('app is running');
 });
+
+app.use(notFoundHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
