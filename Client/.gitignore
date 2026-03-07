@@ -7,11 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-electron/
+build/
+release/
+
+# Electron artifacts
+*.AppImage
+*.asar
+*.exe
+*.dmg
+
+# Environment
 .env
-dist
-dist-ssr
-*.local
+.cache
 
 # Editor directories and files
 .vscode/*
